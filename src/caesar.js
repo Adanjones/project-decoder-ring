@@ -19,29 +19,42 @@ caesarModule = function () {
     }
 
     // Normalize shift to be within the range -25 to 25
-    
+    shift = ((shift % 26) + 26) % 26;
 
     // Convert the input string to an array of characters
-    
+    inputArray = split input into an array of characters;
 
     // Process each character in the input
-    
-        
+    result = map each character in inputArray to a new character:
+      if (character is alphabetic) {
+        isUpperCase = check if character is uppercase;
+        baseCode = get ASCII code for 'A' or 'a' depending on case;
+
         // Calculate the new character code after shifting
-        
-        
+        newCode = character's ASCII code + (if encode then shift else -shift);
+
         // Wrap around the alphabet if needed
-        
-        
+        if (newCode is less than baseCode) {
+          newCode = newCode + 26;
+        } else if (newCode is greater than baseCode + 25) {
+          newCode = newCode - 26;
+        }
+
+        newCharacter = convert newCode to the corresponding character;
+      } else {
         // Non-alphabetic characters are unchanged
-        
+        newCharacter = character;
+      }
 
     // Join the array of characters, convert to lowercase, and form the final result
-    
+    return join result into a string, convert to lowercase;
+  }
 
+  // Expose the caesar function as part of the module
   return {
     caesar,
   };
+};
 })();
 
 module.exports = { caesar: caesarModule.caesar };
