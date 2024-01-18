@@ -3,54 +3,42 @@
 // Only add code (helper methods, variables, etc.) within the scope
 // of the anonymous function on line 6
 
-const caesarModule = (function () {
-
-  // Helper function to check if a character is alphabetic
-  function isAlphabetic(char) {
-    return /^[a-zA-Z]$/.test(char);
-  };
-  
-  function caesar(input, shift, encode = true) {
-    // Check if shift is valid
-    if (shift === 0 || shift < -25 || shift > 25 || shift === undefined) {
-      return false;
-    }
-    
-    // Normalize shift to be within the range -25 to 25
-    shift = ((shift % 26) + 26) % 26;
-    
-    // Convert the input string to an array of characters
-    const inputArray = input.split('');
-    
-    // Process each character in the input
-    const result = inputArray.map((char) => {
-      if (isAlphabetic(char)) {
-        const isUpperCase = char === char.toUpperCase();
-        const baseCode = isUpperCase ? 'A'.charCodeAt(0) : 'a'.charCodeAt(0);
-        
-        // Calculate the new character code after shifting
-        let newCode = char.charCodeAt(0) + (encode ? shift : -shift);
-        
-        // Wrap around the alphabet if needed
-        if (newCode < baseCode) {
-          newCode += 26;
-        } else if (newCode > baseCode + 25) {
-          newCode -= 26;
-        }
-        
-        return String.fromCharCode(newCode);
-      } else {
-        // Non-alphabetic characters are unchanged
-        return char;
-      }
-    });
-    
-    // Join the array of characters, convert to lowercase, and form the final result
-    return result.join('').toLowerCase();
+function caesar(input, shift, encode = true) {
+  // Error handling
+  if (shift === 0 || shift < -25 || shift > 25) {
+    return false;
   }
-  
-  return {
-    caesar,
-  };
-})();
-module.exports = { caesar: caesarModule.caesar };
+
+  // Define the alphabet
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+  // Helper function to shift a single character
+  function shiftChar(char, shift) {
+    const isUpperCase = char === char.toUpperCase();
+    char = char.toLowerCase();
+
+    if (alphabet.includes(char)) {
+      let newIndex = (alphabet.indexOf(char) + shift) % 26;
+      if (newIndex < 0) {
+        newIndex += 26;
+      }
+
+      const shiftedChar = alphabet[newIndex];
+
+      return isUpperCase ? shiftedChar.toUpperCase() : shiftedChar;
+    } else {
+      return char;
+    }
+  }
+
+  // Apply the shift to each character in the input
+  const result = input
+    .split('')
+    .map((char) => shiftChar(char, encode ? shift : -shift))
+    .join('').toLowerCase();
+
+  return result;
+}
+
+// Export the function for testing
+module.exports = { caesar };

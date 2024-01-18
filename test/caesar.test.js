@@ -1,33 +1,124 @@
-// Write your tests here!
-const { caesar } = require('../src/caesar');
+const { expect } = require("chai");
+const { caesar } = require("../src/caesar");
 
-describe('caesar', () => {
-    it('should return false if the shift value is equal to 0, less than -25, greater than 25, or not present', () => {
-    expect(caesar('A Message', 0)).toBe(false);
-    expect(caesar('A Message', -26)).toBe(false);
-    expect(caesar('A Message', 26)).toBe(false);
-    expect(caesar('A Message')).toBe(false);
+describe("caesar() function tests", () => {
+  describe("error handling", () => {
+    it("should return false if the shift amount is 0", () => {
+      const message = "zebra magazine";
+      const shift = 0;
+      const actual = caesar(message, shift);
+
+      expect(actual).to.be.false;
     });
-    
-    it('should ignore capital letters', () => {
-    expect(caesar('A Message', 3)).toBe(caesar('a message', 3));
+
+    it("should return false if the shift amount is above 25", () => {
+      const message = "zebra magazine";
+      const shift = 26;
+      const actual = caesar(message, shift);
+
+      expect(actual).to.be.false;
     });
-    
-    it('should handle shifts that go past the end of the alphabet when encoding', () => {
-    expect(caesar('Zebra Magazine', 3)).toBe('cheud pdjdclqh');
+
+    it("should return false if the shift amount is less than -25", () => {
+      const message = "zebra magazine";
+      const shift = -26;
+      const actual = caesar(message, shift);
+
+      expect(actual).to.be.false;
     });
-    
-    it('should maintain spaces and other nonalphabetic symbols', () => {
-    expect(caesar('A Message!', 3)).toBe('d phvvdjh!');
-    expect(caesar('A Message!', -3)).toBe('x jxuuxjx!');
+  });
+
+  describe("encoding a message", () => {
+    it("should encode a message by shifting the letters", () => {
+      const message = "message";
+      const shift = 3;
+      const actual = caesar(message, shift);
+      const expected = "phvvdjh";
+
+      expect(actual).to.equal(expected);
     });
-    
-    it('should handle shifts that go past the start of the alphabet when decoding', () => {
-    expect(caesar('cheud pdjdclqh', -3, false)).toBe('zebra magazine');
+
+    it("should leave spaces and other symbols as is", () => {
+      const message = "a message.";
+      const shift = 3;
+      const actual = caesar(message, shift);
+      const expected = "d phvvdjh.";
+
+      expect(actual).to.equal(expected);
     });
-    
-    it('should return false for invalid shift values', () => {
-    expect(caesar('A Message', 99)).toBe(false);
-    expect(caesar('A Message', -99)).toBe(false);
+
+    it("should ignore capital letters", () => {
+      const message = "A Message";
+      const shift = 3;
+      const actual = caesar(message, shift);
+      const expected = "d phvvdjh";
+
+      expect(actual).to.equal(expected);
     });
+
+    it("should appropriately handle letters at the end of the alphabet", () => {
+      const message = "zebra magazine";
+      const shift = 3;
+      const actual = caesar(message, shift);
+      const expected = "cheud pdjdclqh";
+
+      expect(actual).to.equal(expected);
+    });
+
+    it("should allow for a negative shift that will shift to the left", () => {
+      const message = "zebra magazine";
+      const shift = -3;
+      const actual = caesar(message, shift);
+      const expected = "wbyox jxdxwfkb";
+
+      expect(actual).to.equal(expected);
+    });
+  });
+
+  describe("decoding a message", () => {
+    it("should decode a message by shifting the letters in the opposite direction", () => {
+      const message = "phvvdjh";
+      const shift = 3;
+      const actual = caesar(message, shift, false);
+      const expected = "message";
+
+      expect(actual).to.equal(expected);
+    });
+
+    it("should leave spaces and other symbols as is", () => {
+      const message = "d phvvdjh.";
+      const shift = 3;
+      const actual = caesar(message, shift, false);
+      const expected = "a message.";
+
+      expect(actual).to.equal(expected);
+    });
+
+    it("should ignore capital letters", () => {
+      const message = "D pHvvdjh";
+      const shift = 3;
+      const actual = caesar(message, shift, false);
+      const expected = "a message";
+
+      expect(actual).to.equal(expected);
+    });
+
+    it("should appropriately handle letters at the end of the alphabet", () => {
+      const message = "cheud pdjdclqh";
+      const shift = 3;
+      const actual = caesar(message, shift, false);
+      const expected = "zebra magazine";
+
+      expect(actual).to.equal(expected);
+    });
+
+    it("should allow for a negative shift that will shift to the left", () => {
+      const message = "wbyox jxdxwfkb";
+      const shift = -3;
+      const actual = caesar(message, shift, false);
+      const expected = "zebra magazine";
+
+      expect(actual).to.equal(expected);
+    });
+  });
 });
