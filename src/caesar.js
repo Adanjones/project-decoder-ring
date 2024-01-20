@@ -9,24 +9,23 @@ const caesarModule = (function () {
       if (!shift || shift < -25 || shift > 25)
         throw new Error(`Shift must be defined and be between -25 and 25`); // valid shift checking
       if (typeof input !== "string")
-        throw new Error(`Input provided must be a defined`); // valid input checking
+        throw new Error(`Input provided must be a defined`); 
       shift *= encode ? 1 : -1; //if we are decoding, we need to shift in the opposite direction
-      return input //iterate through the input string and map our shifted characters
+      return input 
         .toLowerCase()
         .split("")
         .map((character) => _shifter(character, shift))
         .join("");
-    } catch (error) {
-      //console.log(`${error}`); //uncomment to print the error to our console for debugging
-      return false; //if we throw an error, we return false
+    } catch (error) { 
+      return false; 
     }
   }
   //Helper function that preforms the actual mathematical algorithm
   function _shifter(character, shift) {
-    const key = "abcdefghijklmnopqrstuvwxyz".split(""); //array of alphabet as our cipher key
+    const key = "abcdefghijklmnopqrstuvwxyz".split("");
     if (!character.match(/[a-z]/)) return character; //if the current character isn't a letter, we aren't transforming it
-    let index = key.indexOf(character); //find index number from key array
-    let shifted = (((index + shift) % 26) + 26) % 26; //remainder of index plus shift plus the remainder of that plus 26
+    let index = key.indexOf(character); 
+    let shifted = (((index + shift) % 26) + 26) % 26; 
     return key[shifted];
   }
   return {
